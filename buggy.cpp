@@ -4,7 +4,7 @@ using namespace std;
 struct Point {
     int x, y;
 
-    Point () : x(0), y(0) {}
+    Point () : x(0), y(0) {} // proper memory allocation
     Point (int _x, int _y) : x(_x), y(_y) {}
 };
 
@@ -21,7 +21,7 @@ public:
         }
     }
 
-    ~Shape () {
+    ~Shape () { // completed destructor
         for (int i=0; i<vertices; i++) {
             delete points[i];
         }
@@ -29,14 +29,14 @@ public:
     }
 
     void addPoints (Point pts[] /* unsized Point array */) {
-        for (int i = 0; i < vertices; i++) {
-            memcpy(points[i], &pts[i%vertices], sizeof(Point));
+        for (int i = 0; i < vertices; i++) { // changed from <= to = for out bound access
+            *points[i] = pts[i%vertices]; // avoiding the use of memcpy()
         }
     }
 
-    double area () {
+    double area () { // should not return a pointer double so area is returned by value and not reference
         int temp = 0;
-        for (int i = 0; i < vertices; i++) {
+        for (int i = 0; i < vertices; i++) { // changed from <= to = for out bound access
             // FIXME: there are two methods to access members of pointers
             //        use one to fix lhs and the other to fix rhs
             int lhs = points[i]->x * points[(i+1)%vertices]->y; // arrow syntax
@@ -48,7 +48,7 @@ public:
     }
 };
 
-int main () {
+/* int main () {
     // FIXME: create the following points using the three different methods
     //        of defining structs:
     //          tri1 = (0, 0)
@@ -92,4 +92,4 @@ int main () {
 
     delete tri;
     delete quad;
-}
+} */
